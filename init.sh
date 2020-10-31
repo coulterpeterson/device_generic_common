@@ -189,15 +189,16 @@ function init_uvesafb()
 
 function init_hal_gralloc()
 {
-	[ "$VULKAN" = "1" ] && GRALLOC=gbm
-
-	case "$(cat /proc/fb | head -1)" in
-		*virtio*drmfb|*DRM*emulated)
-			HWC=${HWC:-drm}
-			GRALLOC=${GRALLOC:-gbm}
-			video=${video:-1280x768}
-			;&
-		0*i915drmfb|0*inteldrmfb|0*radeondrmfb|0*nouveau*|0*svgadrmfb|0*amdgpudrmfb)
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*virtio_gpu)
+			if [ "$HWACCEL" != "0" ]; then
+				set_property ro.hardware.hwcomposer drm
+				set_property ro.hardware.gralloc gbm
+				set_property debug.drm.mode.force ${video:-1280x800}
+			fi
+			set_prop_if_empty sleep.state none
+			;;
+		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC:-}
 				set_property ro.hardware.gralloc ${GRALLOC:-drm}
@@ -207,7 +208,7 @@ function init_hal_gralloc()
 		"")
 			init_uvesafb
 			;&
-		0*)
+		*)
 			;;
 	esac
 
