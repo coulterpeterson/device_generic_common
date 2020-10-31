@@ -222,11 +222,11 @@ function init_hal_hwcomposer()
 
 function init_hal_vulkan()
 {
-	case "$(cat /proc/fb | head -1)" in
-		0*i915drmfb|0*inteldrmfb)
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*i915)
 			set_property ro.hardware.vulkan android-x86
 			;;
-		0*amdgpudrmfb)
+		*amdgpu)
 			set_property ro.hardware.vulkan radv
 			;;
 		*)
