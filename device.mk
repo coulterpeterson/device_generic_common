@@ -27,11 +27,9 @@ PRODUCT_PROPERTY_OVERRIDES := \
     debug.stagefright.ccodec=0 \
     debug.stagefright.omx_default_rank.sw-audio=1 \
     debug.stagefright.omx_default_rank=0 \
-    ro.lmk.kill_timeout_ms=100
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
+    ro.lmk.kill_timeout_ms=100 \
     ro.arch=x86 \
-    persist.rtc_local_time=1 \
+    persist.rtc_local_time=1
 
 PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
