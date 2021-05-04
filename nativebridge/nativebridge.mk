@@ -32,7 +32,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 endif
 
 ifneq ($(HOUDINI_PREINSTALL),intel)
-PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libnb.so
+PRODUCT_PRODUCT_PROPERTIES := ro.dalvik.vm.native.bridge=libnb.so
 
 PRODUCT_PACKAGES := libnb
 endif
