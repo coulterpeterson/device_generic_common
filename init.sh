@@ -129,6 +129,9 @@ function init_hal_bluetooth()
 function init_hal_camera()
 {
 	case "$UEVENT" in
+		*81EK*)
+			set_prop_if_empty hal.camera.0 0,0
+			;;
 		*e-tabPro*)
 			set_prop_if_empty hal.camera.0 0,270
 			set_prop_if_empty hal.camera.2 1,90
@@ -181,15 +184,15 @@ function init_hal_gralloc()
 {
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
 
-	case "$(cat /proc/fb | head -1)" in
-		*virtio*drmfb|*DRM*emulated)
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*virtio_gpu)
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
 			video=${video:-1280x768}
 			;&
-		0*i915drmfb|0*inteldrmfb|0*radeondrmfb|0*nouveau*|0*svgadrmfb|0*amdgpudrmfb)
+		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC:-}
+				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-drm}
 				set_drm_mode
 			fi
@@ -197,7 +200,7 @@ function init_hal_gralloc()
 		"")
 			init_uvesafb
 			;&
-		0*)
+		*)
 			;;
 	esac
 
@@ -208,16 +211,17 @@ function init_hal_gralloc()
 function init_hal_hwcomposer()
 {
 	# TODO
+	[ "$HWC" = "drmfb" ] && start vendor.hwcomposer-2-1.drmfb
 	return
 }
 
 function init_hal_vulkan()
 {
-	case "$(cat /proc/fb | head -1)" in
-		0*i915drmfb|0*inteldrmfb)
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*i915)
 			set_property ro.hardware.vulkan android-x86
 			;;
-		0*amdgpudrmfb)
+		*amdgpu)
 			set_property ro.hardware.vulkan radv
 			;;
 		*)
@@ -333,7 +337,7 @@ function init_hal_sensors()
 			set_property ro.iio.accel.x.opt_scale -1
 			set_property ro.iio.accel.y.opt_scale -1
 			;;
-		*SP111-33*)
+		*SP111-33*|*TP300L*)
 			set_property ro.iio.accel.quirks no-trig
 			;&
 		*ST70416-6*)
@@ -383,7 +387,7 @@ function init_tscal()
 		*ST70416-6*)
 			modprobe gslx680_ts_acpi
 			;&
-		*T91*|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
+		*81EK*|*T91**|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
 			create_pointercal
 			return
 			;;
