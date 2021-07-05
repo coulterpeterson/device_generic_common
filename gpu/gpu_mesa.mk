@@ -9,6 +9,7 @@
 #
 
 PRODUCT_PACKAGES := \
+    amdgpu.ids \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
     gralloc.drm     \
     gralloc.gbm gralloc.minigbm gralloc.intel \
