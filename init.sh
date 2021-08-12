@@ -573,6 +573,9 @@ function do_bootcomplete()
             chown 1010.1010 $FILE_CHECK
             chmod 660 $FILE_CHECK
 	fi
+	for e in /sys/class/input/event*; do
+		[ -c /dev/input/`basename $e` ] || echo add > $e/uevent
+	done
 
 	post_bootcomplete
 }
