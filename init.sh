@@ -205,6 +205,8 @@ function init_hal_gralloc()
 	esac
 
 	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl swiftshader
+	# gbm_gralloc does not support (yet) the skia renderengine (default in Android S)
+	[ "$(getprop ro.hardware.gralloc)" = "gbm" ] && set_property debug.renderengine.backend threaded
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
