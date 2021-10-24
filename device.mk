@@ -132,3 +132,7 @@ $(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
 
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
+
+# Add agp-apps
+$(call inherit-product-if-exists, vendor/prebuilts/agp-apps/agp-apps.mk)
+
