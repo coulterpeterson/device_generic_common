@@ -189,11 +189,13 @@ function init_hal_gralloc()
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
 			video=${video:-1280x768}
+			[ -f /vendor/lib/egl/libEGL_mesa.so ] && set_property ro.hardware.egl mesa
 			;&
 		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
+				[ -f /vendor/lib/egl/libEGL_mesa.so ] && set_property ro.hardware.egl mesa
 				set_drm_mode
 			fi
 			;;
@@ -221,10 +223,13 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			set_property ro.hardware.vulkan android-x86
+			set_property ro.hardware.vulkan intel
 			;;
 		*amdgpu)
-			set_property ro.hardware.vulkan radv
+			set_property ro.hardware.vulkan radeon
+			;;
+		*virtio_gpu)
+			set_property ro.hardware.vulkan virtio
 			;;
 		*)
 			;;

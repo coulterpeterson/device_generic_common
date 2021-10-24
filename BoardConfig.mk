@@ -70,12 +70,12 @@ SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser
 BOARD_WPA_SUPPLICANT_DRIVER ?= NL80211
 WPA_SUPPLICANT_VERSION ?= VER_2_1_DEVEL
 
-BOARD_GPU_DRIVERS ?= i915 i965 iris nouveau r300g r600g radeonsi virgl vmwgfx
+BOARD_GPU_DRIVERS ?= i915 i965 iris freedreno panfrost nouveau r300g r600g radeonsi virgl vmwgfx
 ifneq ($(strip $(BOARD_GPU_DRIVERS)),)
 TARGET_HARDWARE_3D := true
 endif
 
-BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
+BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M) androidboot.hardware=android_x86_64
 TARGET_KERNEL_DIFFCONFIG := device/generic/common/selinux_diffconfig
 
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
@@ -105,3 +105,9 @@ TARGET_USES_HWC2 ?= true
 BUILD_BROKEN_USES_BUILD_HOST_EXECUTABLE := true
 BUILD_BROKEN_USES_BUILD_HOST_STATIC_LIBRARY := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
+BOARD_MESA3D_USES_MESON_BUILD := true
+BOARD_MESA3D_CLASSIC_DRIVERS :=
+BOARD_MESA3D_GALLIUM_DRIVERS := i915 crocus iris nouveau r300 r600 radeonsi svga virgl
+BOARD_MESA3D_VULKAN_DRIVERS := amd intel
+#BOARD_MESA3D_BUILD_LIBGBM := true

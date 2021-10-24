@@ -20,7 +20,8 @@ TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_defconfig
 KERNEL_CONFIG_DIR := arch/x86/configs
 
 ifeq ($(TARGET_KERNEL_ARCH),x86_64)
-CROSS_COMPILE := $(abspath $(TARGET_TOOLS_PREFIX))
+CROSS_COMPILE := x86_64-linux-androidkernel-
+KERNEL_CLANG_TRIPLE ?= CLANG_TRIPLE=x86_64-linux-gnu-
 KERNEL_CLANG_FLAGS := \
         LLVM=1 \
         CC=$(abspath $(LLVM_PREBUILTS_PATH)/clang) \
@@ -49,8 +50,8 @@ KBUILD_JOBS := $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
 endif
 
 mk_kernel := + $(hide) prebuilts/build-tools/$(HOST_PREBUILT_TAG)/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
-	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
-	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod PERL=/usr/bin/perl \
+	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) \
+	YACC=/usr/bin/bison LEX=/usr/bin/flex M4=$(abspath $(M4)) DEPMOD=/sbin/depmod PERL=/usr/bin/perl \
 	$(KERNEL_CLANG_FLAGS)
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
