@@ -117,3 +117,26 @@ PRODUCT_PACKAGES_DEBUG := \
 
 PRODUCT_HOST_PACKAGES := \
     qemu-android \
+
+# Add ADB & Shell packages
+
+PRODUCT_PACKAGES += \
+    adbd_system_api \
+    com.android.adbd \
+    com.android.conscrypt \
+    debuggerd \
+    logcat \
+    logd \
+    odsign \
+    run-as \
+    shell_and_utilities_system \
+
+PRODUCT_HOST_PACKAGES += \
+    adb \
+
+PRODUCT_SYSTEM_PROPERTIES += debug.atrace.tags.enableflags=0
+
+PRODUCT_PACKAGES_DEBUG := \
+    strace \
+    su \
+
