@@ -128,6 +128,9 @@ $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-hea
 GAPPS_VARIANT ?= pico
 $(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),vendor/google/products/gms.mk,vendor/opengapps/build/opengapps-packages.mk))
 
+# foss apps
+$(call inherit-product-if-exists, vendor/foss/foss.mk)
+
 # Get native bridge settings
 ifeq ($(patsubst %x86,,$(lastword $(TARGET_PRODUCT))),)
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
