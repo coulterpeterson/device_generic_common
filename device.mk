@@ -148,6 +148,10 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 # Add agp-apps
 $(call inherit-product-if-exists, vendor/prebuilts/agp-apps/agp-apps.mk)
 
+# Use altered freeform config from device/generic/goldfish
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/display_settings_freeform.xml:$(TARGET_COPY_OUT_VENDOR)/etc/display_settings_freeform.xml \
+
 # Get native bridge settings
 $(call inherit-product,build/make/target/product/product_android_x86_64.mk)
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
