@@ -169,3 +169,7 @@ $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/widevine.mk)
 $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/native_bridge_arm_on_x86.mk)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
+
+# Call common ROM configs
+$(call inherit-product-if-exists, $(shell find vendor/ -type f -name common.mk))
+$(call inherit-product-if-exists, $(shell find vendor/ -type f -name common_full_tablet_wifionly.mk))
