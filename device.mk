@@ -32,6 +32,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.rtc_local_time=1
 
 PRODUCT_COPY_FILES := \
+    vendor/gearlock/out/gri/gearlock:gearlock \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
     $(if $(wildcard $(PRODUCT_DIR)init.sh),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.sh:system/etc/init.sh \
     $(if $(wildcard $(PRODUCT_DIR)modules.blocklist),$(PRODUCT_DIR),$(LOCAL_PATH)/)modules.blocklist:system/etc/modules.blocklist \
