@@ -180,3 +180,7 @@ $(call inherit-product-if-exists, $(shell find vendor/ -type f -name common_full
 # Need this so that the application's loop on reading input can be synchronized with HW VSYNC
 PRODUCT_VENDOR_PROPERTIES += \
     ro.surface_flinger.running_without_sync_framework=true
+
+# Enable GPU-intensive background blur support on Cuttlefish when requested by apps
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.surface_flinger.supports_background_blur 1
