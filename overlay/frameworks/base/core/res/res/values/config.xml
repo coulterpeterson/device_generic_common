@@ -115,7 +115,11 @@
          The duplication is necessary, because this information is used before the features are
          available to the system.-->
     <bool name="config_freeformWindowManagement">true</bool>
-
+    
+    <!-- True if the device supports at least one form of multi-window.
+         E.g. freeform, split-screen, picture-in-picture. -->
+    <bool name="config_supportsMultiWindow">true</bool>
+    
     <!-- Controls the opacity of the navigation bar depending on the visibility of the
          various workspace stacks.
          0 - Nav bar is always opaque when either the freeform stack or docked stack is visible.
