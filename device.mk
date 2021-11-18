@@ -176,3 +176,7 @@ endif
 # Call common ROM configs
 $(call inherit-product-if-exists, $(shell find vendor/ -type f -name common.mk))
 $(call inherit-product-if-exists, $(shell find vendor/ -type f -name common_full_tablet_wifionly.mk))
+
+# Need this so that the application's loop on reading input can be synchronized with HW VSYNC
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.surface_flinger.running_without_sync_framework=true
