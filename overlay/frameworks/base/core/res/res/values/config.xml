@@ -135,4 +135,10 @@
          opaque.
          -->
     <integer name="config_navBarOpacityMode">1</integer>
+    
+    <!-- If the display smallest screen width is greater or equal to this value, we will treat it
+         as a large screen device, which will have some multi window features enabled by default.
+    -->
+    <integer name="config_largeScreenSmallestScreenWidthDp">300</integer>
+    
 </resources>
