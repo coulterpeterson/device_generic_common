@@ -16,12 +16,15 @@ PRODUCT_PACKAGES := \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest
+
 PRODUCT_PACKAGES += \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
     vulkan.radeon \
-    vulkan.intel
+    vulkan.intel \
+    libvulkan_enc
+
 PRODUCT_PACKAGES += \
     libEGL_mesa \
     libGLESv1_CM_mesa \
@@ -32,8 +35,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608 \
     ro.hardware.vulkan.level = 1 \
-    ro.hardware.vulkan.version = 4194307
+    ro.hardware.vulkan.version = 4194307 \
+    ro.hardware.egl = mesa \
+    debug.renderengine.backend = gles
 
 PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:system/etc/permissions/android.hardware.vulkan.compute.xml \
     frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:system/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:system/etc/permissions/android.hardware.vulkan.version.xml
