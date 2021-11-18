@@ -120,6 +120,14 @@
          E.g. freeform, split-screen, picture-in-picture. -->
     <bool name="config_supportsMultiWindow">true</bool>
     
+    <!-- Whether the device supports non-resizable activity in multi windowing modes.
+         -1: The device doesn't support non-resizable in multi windowing modes.
+          0: The device supports non-resizable in multi windowing modes only if this is a large
+             screen (smallest width >= {@link config_largeScreenSmallestScreenWidthDp}).
+          1: The device always supports non-resizable in multi windowing modes.
+    -->
+    <integer name="config_supportsNonResizableMultiWindow">1</integer>
+
     <!-- Controls the opacity of the navigation bar depending on the visibility of the
          various workspace stacks.
          0 - Nav bar is always opaque when either the freeform stack or docked stack is visible.
