@@ -46,6 +46,17 @@ PRODUCT_PACKAGES += \
     libGLESv2_angle \
     libfeature_support_angle.so
 
+# GL/Vk implementation for gfxstream
+PRODUCT_PACKAGES += \
+    libOpenglCodecCommon \
+    libOpenglSystemCommon \
+    libGLESv1_CM_emulation \
+    lib_renderControl_enc \
+    libEGL_emulation \
+    libGLESv2_enc \
+    libGLESv2_emulation \
+    libGLESv1_enc
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:system/etc/permissions/android.hardware.vulkan.compute.xml \
