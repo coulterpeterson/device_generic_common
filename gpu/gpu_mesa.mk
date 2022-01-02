@@ -10,8 +10,8 @@
 
 PRODUCT_PACKAGES := \
     amdgpu.ids \
-    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
-    gralloc.gbm gralloc.minigbm gralloc.intel \
+    hwcomposer.drm hwcomposer.drm_minigbm \
+    gralloc.gbm gralloc.minigbm \
     libGLES_mesa    \
     libtxc_dxtn     \
 
