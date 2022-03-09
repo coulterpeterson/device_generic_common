@@ -144,7 +144,7 @@ WITH_BLISS_CHARGER := false
 TARGET_PC_BUILD := true
 
 # Bliss OS specific 
-VER := 11.13
+VER := 11.20
 RELEASE_OS_TITLE := Bliss-OS
 BLISS_BUILD := bliss-x86
 BUILD_NAME_VARIANT := bliss-x86 
