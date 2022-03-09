@@ -29,6 +29,13 @@ ifeq ($(USE_FOSS),true)
 $(call inherit-product-if-exists, vendor/foss/foss.mk)
 endif
 
+ifeq ($(USE_OPENGAPPS),true)
+GAPPS_VARIANT := pico
+DONT_DEXPREOPT_PREBUILTS := true
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
+$(call inherit-product, vendor/opengapps/build/opengapps-packages.mk)
+endif
+
 ifeq ($(USE_MAGISK),true)
 $(call inherit-product, vendor/magisk/magisk.mk)
 
