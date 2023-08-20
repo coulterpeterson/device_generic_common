@@ -49,7 +49,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.rtc_local_time=1 \
     bluetooth.rfkill=1 \
     dalvik.vm.useautofastjni=true \
-    ro.surface_flinger.max_frame_buffer_acquired_buffers=3
+    ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
+    persist.device_config.mglru_native.lru_gen_config=all
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
