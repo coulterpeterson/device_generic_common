@@ -266,6 +266,7 @@ endif
 # Add agp-apps
 $(call inherit-product-if-exists, vendor/agp-apps/agp-apps.mk)
 
+ifneq ($(IS_GO_VERSION),true)
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
@@ -273,6 +274,7 @@ $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.debug.multi_window=true
     persist.sys.debug.desktop_mode=true
+endif
 
 # DRM service opt-in
 PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
