@@ -54,7 +54,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.sys.zram_enabled=1
 
 # LMKd
-ifneq ($(IS_GO_VERSION),true)
+ifneq ($(BOARD_IS_GO_BUILD),true)
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.lmk.critical_upgrade=true \
     ro.lmk.use_minfree_levels=true \
@@ -148,7 +148,7 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
-ifeq ($(IS_GO_VERSION),true)
+ifeq ($(BOARD_IS_GO_BUILD),true)
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-go
 endif
 
@@ -225,7 +225,7 @@ TARGET_WANTS_FOD_ANIMATIONS := false
 #BLISS_BUILD_VARIANT := foss
 WITH_SU := false
 
-ifeq ($(IS_GO_VERSION),true)
+ifeq ($(BOARD_IS_GO_BUILD),true)
 ifeq ($(BOARD_IS_SURFACE_BUILD),true)
 $(error "Go build should not be mixed with Surface build")
 endif
