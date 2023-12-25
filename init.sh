@@ -722,6 +722,8 @@ function do_bootcomplete()
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
 
+	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86 && killall audioserver
+
 	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
