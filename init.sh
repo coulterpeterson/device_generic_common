@@ -74,6 +74,8 @@ function init_hal_audio()
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
 	esac
+
+	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86
 }
 
 function init_hal_bluetooth()
@@ -721,8 +723,6 @@ function do_bootcomplete()
 	init_cpu_governor
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
-
-	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86 && killall audioserver
 
 	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
