@@ -226,6 +226,9 @@ TARGET_WANTS_FOD_ANIMATIONS := false
 WITH_SU := false
 
 ifeq ($(IS_GO_VERSION),true)
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+$(error "Go build should not be mixed with Surface build")
+endif
 # Inherit common Android Go configurations
 $(call inherit-product, build/target/product/go_defaults.mk)
 PRODUCT_TYPE := go
