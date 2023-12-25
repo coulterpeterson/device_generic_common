@@ -795,7 +795,7 @@ function do_bootcomplete()
 	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
 
 	if [ ! "$(getprop ro.boot.slot_suffix)" ]; then
-		pm disable org.lineageos.updater
+		pm disable com.blissos.updater
 	fi
 
 	post_bootcomplete
