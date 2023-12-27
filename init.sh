@@ -76,6 +76,50 @@ function init_hal_audio()
 	esac
 
 	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86
+
+	if [ "$BOARD" == "Jupiter" ]
+	then
+		alsaucm -c Valve-Jupiter-1 set _verb HiFi
+
+		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
+		# headset microphone on d0, 32bit only
+		set_property hal.audio.in.headset "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.headset.format 1
+		amixer -c ${pcm_card} sset 'Headset Mic',0 on
+
+		# internal microphone on d0, 32bit only
+		set_property hal.audio.in.mic "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.mic.format 1
+		amixer -c ${pcm_card} sset 'Int Mic',0 on
+		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
+
+		# headphone jack on d0, 32bit only
+		set_property hal.audio.out.headphone "pcmC${pcm_card}D0p"
+		set_property hal.audio.out.headphone.format 1
+		amixer -c ${pcm_card} sset 'Headphone',0 on
+
+		# speaker on d1, 16bit only
+		set_property hal.audio.out.speaker "pcmC${pcm_card}D1p"
+		set_property hal.audio.out.speaker.format 0
+		amixer -c ${pcm_card} sset 'Left DSP RX1 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX1 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP RX2 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX2 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP1 Preload',0 on
+		amixer -c ${pcm_card} sset 'Right DSP1 Preload',0 on
+
+
+		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
+		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
+		pcm_card=$(cat /proc/asound/cards | grep HDA-Intel | awk '{print $1}')
+		set_property hal.audio.out.hdmi "pcmC${pcm_card}D8p"
+
+		# unmute them all
+		amixer -c ${pcm_card} sset 'IEC958',0 on
+		amixer -c ${pcm_card} sset 'IEC958',1 on
+		amixer -c ${pcm_card} sset 'IEC958',2 on
+		amixer -c ${pcm_card} sset 'IEC958',3 on
+	fi
 }
 
 function init_hal_bluetooth()
@@ -330,6 +374,11 @@ function init_hal_media()
 		set_property ro.yuv420.disable false
 	fi
 
+	if [ "$BOARD" == "Jupiter" ]
+	then
+		FFMPEG_CODEC2_PREFER=${FFMPEG_CODEC2_PREFER:-1}
+	fi
+
 #FFMPEG Codec Setup
 ## Turn on/off FFMPEG OMX by default
 	if [ "$FFMPEG_OMX_CODEC" -ge "1" ]; then
@@ -519,6 +568,14 @@ function init_hal_sensors()
                 [ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
                 hal_sensors=iio
             elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
+                has_sensors=true
+            fi
+
+            # is steam deck?
+            if [ "$BOARD" == "Jupiter" ]
+            then
+                set_property poweroff.disable_virtual_power_button 1
+                hal_sensors=jupiter
                 has_sensors=true
             fi
     fi
