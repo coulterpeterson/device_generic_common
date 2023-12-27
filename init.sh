@@ -77,7 +77,7 @@ function init_hal_audio()
 
 	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86
 
-	if [ "$BOARD" == "Jupiter" ]
+	if [ "$BOARD" == "Jupiter" || "$VENDOR" == "Valve" ]
 	then
 		alsaucm -c Valve-Jupiter-1 set _verb HiFi
 
@@ -374,7 +374,7 @@ function init_hal_media()
 		set_property ro.yuv420.disable false
 	fi
 
-	if [ "$BOARD" == "Jupiter" ]
+	if [ "$BOARD" == "Jupiter" || "$VENDOR" == "Valve" ]
 	then
 		FFMPEG_CODEC2_PREFER=${FFMPEG_CODEC2_PREFER:-1}
 	fi
@@ -572,7 +572,7 @@ function init_hal_sensors()
             fi
 
             # is steam deck?
-            if [ "$BOARD" == "Jupiter" ]
+            if [ "$BOARD" == "Jupiter" || "$VENDOR" == "Valve" ]
             then
                 set_property poweroff.disable_virtual_power_button 1
                 hal_sensors=jupiter
@@ -865,6 +865,7 @@ PATH=/sbin:/system/bin:/system/xbin
 DMIPATH=/sys/class/dmi/id
 BOARD=$(cat $DMIPATH/board_name)
 PRODUCT=$(cat $DMIPATH/product_name)
+VENDOR=$(cat $DMIPATH/sys_vendor)
 UEVENT=$(cat $DMIPATH/uevent)
 
 # import cmdline variables
