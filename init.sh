@@ -73,9 +73,17 @@ function init_hal_audio()
 		VirtualBox*|Bochs*)
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
+		TS10*)
+			set_prop_if_empty hal.audio.out pcmC0D2p
+			;;
 	esac
 
-	[ -z "$(getprop ro.hardware.audio.primary)" ] && setprop ro.hardware.audio.primary x86
+	case "$(ls /proc/asound)" in
+		*sofhdadsp*)
+			AUDIO_PRIMARY=x86_celadon
+			;;
+	esac
+	set_property ro.hardware.audio.primary ${AUDIO_PRIMARY:-x86}
 
 	if [ "$BOARD" == "Jupiter" || "$VENDOR" == "Valve" ]
 	then
