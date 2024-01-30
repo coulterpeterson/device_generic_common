@@ -28,8 +28,7 @@ PRODUCT_PACKAGES += \
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.1-service.vbt \
-#    android.hardware.bluetooth@1.1-service.btlinux \
-
+    android.hardware.bluetooth@1.1-service.btlinux
 
 # Camera HAL
 PRODUCT_PACKAGES += \
