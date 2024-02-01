@@ -51,8 +51,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     dalvik.vm.useautofastjni=true \
     ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
     persist.device_config.mglru_native.lru_gen_config=all \
-    persist.sys.zram_enabled=1 \
-    ro.setupwizard.mode=DISABLED
+    persist.sys.zram_enabled=1
 
 # LMKd
 ifneq ($(BOARD_IS_GO_BUILD),true)
