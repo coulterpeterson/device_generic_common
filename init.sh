@@ -55,6 +55,10 @@ function init_misc()
 		fi
 	fi
 
+	# Tell vold to use ntfs3 driver instead of ntfs-3g
+    if [ "$USE_NTFS3" -ge "1" ] || [ "$VOLD_USE_NTFS3" -ge 1 ]; then
+        set_property ro.vold.use_ntfs3 true
+    fi
 }
 
 function init_hal_audio()
