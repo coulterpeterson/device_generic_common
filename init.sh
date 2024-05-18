@@ -115,62 +115,96 @@ function init_hal_audio()
 
 function init_hal_audio_bootcomplete()
 {
-	if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
-	then
-		alsaucm -c Valve-Jupiter-1 set _verb HiFi
+	if [ -e "/data/vendor/asound.state" ]; then
+		# Initialize once in case a new audio device is plugged in
+		alsa_ctl init
+		# Restore /data/vendor/asound.state if found
+		alsa_ctl restore
+	else
+		# Initialize as usual
+		# 1. Initialize the all the audio cards
+		alsa_ctl init
 
-		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
-		# headset microphone on d0, 32bit only
-		amixer -c ${pcm_card} sset 'Headset Mic',0 on
+		# 2. Restore alsa state for specific cards or turn on all of the 
+		# default controls & set value to max (usually for PCH)
+		for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
+			f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
+			d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
+			if [ -e $f ]; then
+				alsa_ctl -f $f restore $c
+			elif [ -e $d ]; then
+				alsa_ctl -f $d restore $c
+			else
+				alsa_amixer -c $c set Master on
+				alsa_amixer -c $c set Master 100%
+				alsa_amixer -c $c set Headphone on
+				alsa_amixer -c $c set Headphone 100%
+				alsa_amixer -c $c set Speaker on
+				alsa_amixer -c $c set Speaker 100%
+				alsa_amixer -c $c set Capture 80%
+				alsa_amixer -c $c set Capture cap
+				alsa_amixer -c $c set PCM 100% unmute
+				alsa_amixer -c $c set SPO unmute
+				alsa_amixer -c $c set IEC958 on
+				alsa_amixer -c $c set 'Mic Boost' 1
+				alsa_amixer -c $c set 'Internal Mic Boost' 1
 
-		# internal microphone on d0, 32bit only
-		amixer -c ${pcm_card} sset 'Int Mic',0 on
-		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
+				# 2.5. Set alsaucm HiFi verb & devices for specific hardware
+				for d in $(grep '\[.*\]' /proc/asound/cards | awk '{print $4}'); do
+					# Check if the card is rt5651, this card can not be able to 
+					# use both Speaker & Headphones at the same time. So we will enable  
+					# only Speaker for this card and tell users to turn Headphones on
+					# manually if they want to use it.
+					if [ "$(cat /proc/asound/cards | grep rt5651)" ]; then 
+						card_is_rt5651=true
+					fi
 
-		# headphone jack on d0, 32bit only
-		amixer -c ${pcm_card} sset 'Headphone',0 on
+					case $d in
+					*bytcht*|*bytcr*|*cht-bsw*|*chtmax*|*chtrt*)
+						if [ "$card_is_rt5651" == true ]; then
+							alsaucm -c $d set _verb HiFi \
+							set _enadev Speaker \
+							set _enadev Headset \
+							set _enadev Mic
+						else 
+							alsaucm -c $d set _verb HiFi \
+							set _enadev Speaker \
+							set _enadev Headphones \
+							set _enadev Headset \
+							set _enadev Mic
+						fi
+						;;
+					*SOF*)
+						if [ "$(cat /proc/asound/cards | grep -E 'bytcht|bdw')" ]; then
+							if [ "$card_is_rt5651" == true ]; then
+								alsaucm -c $d set _verb HiFi \
+								set _enadev Speaker \
+								set _enadev Headset \
+								set _enadev Mic
+							else
+								alsaucm -c $d set _verb HiFi \
+								set _enadev Speaker \
+								set _enadev Headphones \
+								set _enadev Headset \
+								set _enadev Mic
+							fi
+						fi
+						;;
+					*acp5x*)
+						alsaucm -c $d set _verb HiFi \
+						set _enadev Speaker \
+						set _enadev Headphones \
+						set _enadev Headset \
+						set _enadev Mic
+						;;
+					esac
+				done
+			fi
+		done
 
-		# speaker on d1, 16bit only
-		amixer -c ${pcm_card} sset 'Left DSP RX1 Source',0 ASPRX1
-		amixer -c ${pcm_card} sset 'Right DSP RX1 Source',0 ASPRX2
-		amixer -c ${pcm_card} sset 'Left DSP RX2 Source',0 ASPRX1
-		amixer -c ${pcm_card} sset 'Right DSP RX2 Source',0 ASPRX2
-		amixer -c ${pcm_card} sset 'Left DSP1 Preload',0 on
-		amixer -c ${pcm_card} sset 'Right DSP1 Preload',0 on
-
-		# unmute them all
-		amixer -c ${pcm_card} sset 'IEC958',0 on
-		amixer -c ${pcm_card} sset 'IEC958',1 on
-		amixer -c ${pcm_card} sset 'IEC958',2 on
-		amixer -c ${pcm_card} sset 'IEC958',3 on
+		# 3. Store everything into /data/vendor/asound.state
+		alsa_ctl store
 	fi
-
-#	[ -d /proc/asound/card0 ] || modprobe snd-dummy
-	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
-		f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
-		if [ -e $f ]; then
-			alsa_ctl -f $f restore $c
-		else
-			alsa_ctl init $c
-			alsa_amixer -c $c set Master on
-			alsa_amixer -c $c set Master 100%
-			alsa_amixer -c $c set Headphone on
-			alsa_amixer -c $c set Headphone 100%
-			alsa_amixer -c $c set Speaker on
-			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 80%
-			alsa_amixer -c $c set Capture cap
-			alsa_amixer -c $c set PCM 100% unmute
-			alsa_amixer -c $c set SPO unmute
-			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 1
-			alsa_amixer -c $c set 'Internal Mic Boost' 1
-		fi
-		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
-		if [ -e $d ]; then
-			alsa_ctl -f $d restore $c
-		fi
-	done
 }
 
 function init_hal_bluetooth()
