@@ -160,7 +160,7 @@ function init_hal_audio_bootcomplete()
 					fi
 
 					case $d in
-					*bytcht*|*bytcr*|*cht-bsw*|*chtmax*|*chtrt*)
+					*bytcht*|*bytcr*|*cht-bsw*|*chtmax*|*chtrt*|*chtnau*)
 						if [ "$card_is_rt5651" == true ]; then
 							alsaucm -c $d set _verb HiFi \
 							set _enadev Speaker \
