@@ -609,7 +609,7 @@ function init_hal_sensors()
                 modprobe lis3lv02d_i2c
                 echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
                 ;;
-            *Aspire*SW5-012*)
+            *Aspire*SW5-012*|*Venue*8*Pro*3845*|*ST70416-6*|*Akoya*P2213T*)
                 set_property ro.iio.accel.order 102
                 ;;
             *LenovoideapadD330*)
@@ -623,26 +623,13 @@ function init_hal_sensors()
             *i7Stylus*)
                 set_property ro.iio.accel.x.opt_scale -1
                 ;;
-            *LenovoMIIX320*|*MIIX510*|*MIIX300-10IBY*|*ONDATablet*)
+            *LenovoMIIX320*|*MIIX510*|*MIIX300-10IBY*|*ONDATablet*|
+			*TECLAST*X4*|*SF133AYR110*|*SolTIVW*)
                 set_property ro.iio.accel.order 102
                 set_property ro.iio.accel.x.opt_scale -1
                 set_property ro.iio.accel.y.opt_scale -1
-                ;;
-            *Venue*8*Pro*3845*)
-                set_property ro.iio.accel.order 102
-                ;;
-            *ST70416-6*)
-                set_property ro.iio.accel.order 102
                 ;;
             *Hi10*plus*|*T*0*TA*|*M80TA*|*TECLAST*X16*)
-                set_property ro.iio.accel.y.opt_scale -1
-                ;;
-			*Akoya*P2213T*)
-				set_property ro.iio.accel.order 102
-				;;
-            *TECLAST*X4*|*SF133AYR110*|*SolTIVW*)
-                set_property ro.iio.accel.order 102
-                set_property ro.iio.accel.x.opt_scale -1
                 set_property ro.iio.accel.y.opt_scale -1
                 ;;
 			*TAIFAElimuTab*)
