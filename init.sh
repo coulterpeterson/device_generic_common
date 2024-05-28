@@ -694,28 +694,7 @@ function create_pointercal()
 
 function init_tscal()
 {
-	case "$UEVENT" in
-		*ST70416-6*)
-			modprobe gslx680_ts_acpi
-			;&
-		*T91*|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
-			create_pointercal
-			return
-			;;
-		*)
-			;;
-	esac
-
-	for usbts in $(lsusb | awk '{ print $6 }'); do
-		case "$usbts" in
-			0596:0001|0eef:0001|14e1:6000|14e1:5000)
-				create_pointercal
-				return
-				;;
-			*)
-				;;
-		esac
-	done
+	create_pointercal
 }
 
 function init_ril()
