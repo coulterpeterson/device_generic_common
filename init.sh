@@ -690,32 +690,36 @@ function create_pointercal()
 		chmod 775 /data/misc/tscal
 		chmod 664 /data/misc/tscal/pointercal
 	fi
+
+	# setprop to tell the system to turn on TSCalibrartion
+	set_property ro.tscal.enable true 
 }
 
 function init_tscal()
 {
-	case "$UEVENT" in
-		*ST70416-6*)
-			modprobe gslx680_ts_acpi
-			;&
-		*T91*|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
-			create_pointercal
-			return
-			;;
-		*)
-			;;
-	esac
-
-	for usbts in $(lsusb | awk '{ print $6 }'); do
-		case "$usbts" in
-			0596:0001|0eef:0001|14e1:6000|14e1:5000)
+    if [ "$FORCE_TSCAL" -ge "1" ]; then
+        create_pointercal
+	else
+		case "$UEVENT" in
+			*T91*|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
 				create_pointercal
 				return
 				;;
 			*)
 				;;
 		esac
-	done
+
+		for usbts in $(lsusb | awk '{ print $6 }'); do
+			case "$usbts" in
+				0596:0001|0eef:0001|14e1:6000|14e1:5000)
+					create_pointercal
+					return
+					;;
+				*)
+					;;
+			esac
+		done
+    fi
 }
 
 function init_ril()
@@ -884,6 +888,13 @@ function do_bootcomplete()
 
 	# initialize audio in bootcomplete
 	init_hal_audio_bootcomplete
+
+	# Turn off TSCalibration if property isn't set
+	if [ "$(getprop ro.tscal.enable)" == "true" ]; then
+		pm enable org.zeroxlab.util.tscal
+	else
+		pm disable org.zeroxlab.util.tscal
+	fi
 
 	# check wifi setup
 	FILE_CHECK=/data/misc/wifi/wpa_supplicant.conf
